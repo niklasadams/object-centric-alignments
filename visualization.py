@@ -252,16 +252,16 @@ def draw_move(move: Move, object_colors, start_x: int, start_y: int, linestyle: 
     for obj in move.objects:
         obj_str = obj
         if obj_str in abbreviations.keys():
-            log_obj += obj_str + " "
+            log_obj += obj_str + "\n"
             continue
         numb_obj_str = re.findall(r'\d+', obj_str)
         no_number_obj_str = ''.join([i for i in obj_str if not i.isdigit()])
         if no_number_obj_str in abbreviations.keys():
             number = reduce(lambda a, b: a+b, numb_obj_str)
             number = number[0]
-            log_obj += abbreviations[no_number_obj_str] + number + " "
+            log_obj += abbreviations[no_number_obj_str] + number + "\n"
             continue
-        log_obj += obj_str + " "
+        log_obj += obj_str + "\n"
 
     log_obj_text = ax.text(start_x + TEXT_BUFFER_LEFT,
                              start_y - ACTIVITY_HIGHT - (0.5 * OBJECT_HEIGHT),

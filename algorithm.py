@@ -133,7 +133,11 @@ def process_execution_net_from_process_execution(ocel, indirect_id, px, date_for
         event.event_id = event_id
         event.event_name = ocel.get_value(event_id, 'event_activity')
         event.objects = get_all_event_objects(ocel, event_id)
-        event.datetime = datetime.strptime(str(ocel.get_value(event_id, 'event_timestamp')),
+        date_string =str(ocel.get_value(event_id, 'event_timestamp'))
+        date_string = date_string.split(" ")
+        date_string[-1] = date_string[-1][:8]
+        date_string = " ".join(date_string)
+        event.datetime = datetime.strptime(date_string,
                                            date_format)  # XXX Dangerous hard coded
         px_graph.add_event(event)
 
@@ -777,7 +781,7 @@ def dijkstra(sync_net: ObjectCentricPetriNet, ini_marking: FrozenMarking, fin_ma
     return alignment
 
 
-def calculate_oc_alignments(ocel: OCEL, extern_ocpn: ObjectCentricPetriNet, date_format='%Y-%m-%d %H:%M:%S%z') -> Dict[str, Alignment]:
+def calculate_oc_alignments(ocel: OCEL, extern_ocpn: ObjectCentricPetriNet, date_format='%Y-%m-%d %H:%M:%S') -> Dict[str, Alignment]:
     # XXX ToDo Remove once the helper functions are gone
     transition_to_move_map = dict()
     global_trans_properties_key = []
