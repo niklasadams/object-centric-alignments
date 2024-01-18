@@ -114,8 +114,14 @@ class ObjectCentricPetriNet(object):
         def __get_out_arcs(self):
             return self.__out_arcs
 
+        def __set_out_arcs(self,out_arcs):
+            self.__out_arcs = out_arcs
+
         def __get_in_arcs(self):
             return self.__in_arcs
+
+        def __set_in_arcs(self,in_arcs):
+            self.__in_arcs = in_arcs
 
         def __set_properties(self, properties):
             self.__properties = properties
@@ -166,8 +172,8 @@ class ObjectCentricPetriNet(object):
 
         name = property(__get_name, __set_name)
         label = property(__get_label, __set_label)
-        in_arcs = property(__get_in_arcs)
-        out_arcs = property(__get_out_arcs)
+        in_arcs = property(__get_in_arcs, __set_in_arcs)
+        out_arcs = property(__get_out_arcs, __set_out_arcs)
         properties = property(__get_properties, __set_properties)
         silent = property(__get_silent, __set_silent)
 
@@ -202,6 +208,9 @@ class ObjectCentricPetriNet(object):
         def __get_variable(self):
             return self.__variable
 
+        def __set_variable(self, variable):
+            self.__variable = variable
+
         def __set_properties(self, properties):
             self.__properties = properties
 
@@ -229,7 +238,7 @@ class ObjectCentricPetriNet(object):
 
         source = property(__get_source, __set_source)
         target = property(__get_target, __set_target)
-        variable = property(__get_variable)
+        variable = property(__get_variable,__set_variable)
         weight = property(__get_weight, __set_weight)
         properties = property(__get_properties, __set_properties)
 
@@ -433,6 +442,22 @@ class ObjectCentricPetriNet(object):
             if transition.name == name:
                 return transition
         return None
+
+    def flatten_to_type(self, object_type):
+        tmp_self = deepcopy(self)
+        fl_places = [p for p in tmp_self.places if p.object_type == object_type]
+        fl_arcs = [a for a in tmp_self.arcs if a.source in fl_places or a.target in fl_places]
+        fl_obs = [a.source for a in fl_arcs] + [a.target for a in fl_arcs]
+        fl_transitions = [t for t in tmp_self.transitions if t in fl_obs]
+        for a in fl_arcs:
+            a.variable = False
+        for p in fl_places:
+            p.in_arcs = [a for a in p.in_arcs if a in fl_arcs]
+            p.out_arcs = [a for a in p.out_arcs if a in fl_arcs]
+        for t in fl_transitions:
+            t.in_arcs = [a for a in t.in_arcs if a in fl_arcs]
+            t.out_arcs = [a for a in t.out_arcs if a in fl_arcs]
+        return ObjectCentricPetriNet(transitions=fl_transitions,places=fl_places,arcs=fl_arcs)
 
     def __deepcopy__(self, memodict={}):
         new_name = deepcopy(self.name)
