@@ -40,7 +40,7 @@ for i in tqdm(range(0,len(ocel.variants))):
     number_of_offers = object_dict["offer"]
 
     # We skip large number of offers because they are extremely slow and rare, leading to unreliable results
-    if number_of_offers > 6:
+    if number_of_offers > 7:
         continue
 
 
@@ -95,7 +95,7 @@ for i in tqdm(range(0,len(ocel.variants))):
         y_memory.append(helperfunctions.get_mem_total(snapshot))
 
         # save information to file
-        f = open("thesis_evaluation_results.csv", "a")
+        f = open("thesis_evaluation_results_7.csv", "a")
         f.write(f"{number_of_events};{number_of_objects};{number_of_offers};{alignment_cost_total};{alignment_count};{result / n};{helperfunctions.get_mem_total(snapshot)}\n")
         f.close()
 
