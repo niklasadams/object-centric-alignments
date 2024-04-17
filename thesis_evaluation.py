@@ -12,7 +12,8 @@ import localocpa.algo.util.filtering.log.case_filtering as case_filtering
 
 ocel_filename = "filtered_BPI2017.jsonocel"
 ocel = ocel_import_factory_json.apply(ocel_filename)
-
+print("Number of variants in the total log")
+print(len(ocel.variants))
 ocpn = TestOCPNS().loan_application_de_jure()
 x = []
 y_time = []
